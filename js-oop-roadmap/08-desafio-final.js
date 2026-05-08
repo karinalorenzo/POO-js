@@ -87,6 +87,18 @@ class Account {
 - applyInterest(): aplica la tasa de interés al saldo
 */
 
+class SavingsAccount extends Account { 
+    constructor(owner, password, interestRate){
+        super(owner, password)
+        this.interestRate = interestRate
+    }
+
+    applyInterest(){
+        const interest = this.balance * this.interestRate
+        this.balance += interest
+    }
+}
+
 /*
 3. CurrentAccount (Cuenta Corriente)
 ----------------------------------
