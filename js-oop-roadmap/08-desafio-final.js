@@ -174,6 +174,7 @@ class SavingsAccount extends Account {
 - withdraw(): permite saldo negativo hasta el límite de sobregiro
 */
 
+//- EXTRA Usar Object.freeze() para proteger objetos contra modificaciones
 class CurrentAccount extends Account {
     constructor(owner, password, overdraftLimit = BankConfig.defaultOverdraftLimit){
         super(owner, password)
@@ -186,11 +187,11 @@ class CurrentAccount extends Account {
         }
 
         const newBalance = this.balance - amount
-
+        
         if (newBalance < -this.overdraftLimit){
             throw new Error("Overdraft limit exceeded")
         }
-
+        
         this.balance = newBalance
     }
 }
@@ -215,7 +216,7 @@ class Bank {
     constructor(){
         this.accounts = []
     }
-
+    
     addAccount(account){
         if (!(account instanceof Account)){
             throw new Error("Only Account instances can be added")
@@ -261,7 +262,6 @@ class Transaction {
     }   
 }
 
-//- Usar Object.freeze() para proteger objetos contra modificaciones
 
 
 /*************************************************************
