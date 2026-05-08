@@ -70,16 +70,25 @@ class Account {
         this.#addTransaction("withdraw", amount)
     } 
 
+    
     get balanceAmount(){
         return this.balance
     }
-
+    
     set password(newPassword){
-        if (newPassword.lenght <6){
+        if (newPassword.lenght < 6 ){
             throw new Error("Password must be at least 6 characters long");
         }
         this.#password = newPassword
     }
+
+    // EXTRA- Método getStatement() que muestra el extracto de movimientos de la cuenta
+    getStatement() {
+        return this.#transactions.map(tx => {
+          const date = tx.date.toLocaleString()
+          return `[${date}] ${tx.type}: ${tx.amount}€ ${tx.description}`
+        })
+      }
 }
 
 
@@ -209,9 +218,9 @@ class Transaction {
     }   
 }
 
+ 
 
 
- // - Método getStatement() que muestra el extracto de movimientos de la cuenta
 // - Implementar bloqueo de cuenta después de 3 intentos de contraseña incorrecta
 // - Usar encapsulamiento real con # o Symbol para propiedades privadas
 // - Utilizar Object.defineProperty para personalizar getters/setters
