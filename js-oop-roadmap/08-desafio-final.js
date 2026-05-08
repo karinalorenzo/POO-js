@@ -38,6 +38,7 @@ Orientada a Objetos (POO):
 
 class Account {
     #password
+    #transactions = [] // <- Nueva propiedad privada
 
     constructor(owner, password){
         this.owner = owner;
@@ -45,11 +46,18 @@ class Account {
         this.#password = password;
     }
 
+    // ← 2. MÉTODO PRIVADO para registrar transacciones
+  #addTransaction(type, amount, description = "") {
+    const tx = new Transaction(type, amount, description)
+    this.#transactions.push(tx)
+  }
+
     deposit(amount){
         if(amount <= 0){
             throw new Error("Deposit amount must be greater than 0")
         }
         this.balance += amount
+        this.#addTransaction("deposit", amount)
     }
     withdraw (amount){
         if (amount <= 0){
@@ -59,7 +67,8 @@ class Account {
             throw new Error("Insufficient funds")
         }
         this.balance -= amount
-    }
+        this.#addTransaction("withdraw", amount)
+    } 
 
     get balanceAmount(){
         return this.balance
@@ -188,14 +197,26 @@ class Bank {
 💡 Extras (desafío opcional para aumentar la complejidad)
 **************************************************************/
 
-/*
-- Crear una clase Transaction para registrar el historial de transacciones
-- Método getStatement() que muestra el extracto de movimientos de la cuenta
-- Implementar bloqueo de cuenta después de 3 intentos de contraseña incorrecta
-- Usar encapsulamiento real con # o Symbol para propiedades privadas
-- Utilizar Object.defineProperty para personalizar getters/setters
-- Usar Object.freeze() para proteger objetos contra modificaciones
-*/
+
+//- Crear una clase Transaction para registrar el historial de transacciones
+
+class Transaction {
+    constructor(type, ammount, description = "") {
+        this.type = type
+        this.ammount = ammount
+        this.date = new Date()
+        this.description = description
+    }   
+}
+
+
+
+ // - Método getStatement() que muestra el extracto de movimientos de la cuenta
+// - Implementar bloqueo de cuenta después de 3 intentos de contraseña incorrecta
+// - Usar encapsulamiento real con # o Symbol para propiedades privadas
+// - Utilizar Object.defineProperty para personalizar getters/setters
+//- Usar Object.freeze() para proteger objetos contra modificaciones
+
 
 /*************************************************************
 ✅ Qué se debe evaluar / verificar
