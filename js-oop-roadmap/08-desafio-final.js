@@ -36,90 +36,94 @@ Orientada a Objetos (POO):
 - setter password: verifica que la contraseña tenga al menos 6 caracteres
 */
 
+// EXTRA - Usar encapsulamiento real con # o Symbol para propiedades privadas
+const transactionsKey = Symbol("transactions") // esto permite encapsular el historial de transacciones
+
 class Account {
     #password
     // Nuevas propiedades privadas
-    #transactions = [] 
-    #failedAttemps = 0 
-    #isLocked = false
-    
-    constructor(owner, password){
-        this.owner = owner;
-        this.balance = this.balance;
-        this.#password = password;
+   /*  #transactions = []  */
+   #failedAttemps = 0 
+   #isLocked = false
+   
+   constructor(owner, password){
+       this.owner = owner;
+       this.balance = this.balance;
+       this.#password = password;
+       this[transactionsKey] = [] // usamos el encapsulamiento
     }
     
     // EXTRA - Implementar bloqueo de cuenta después de 3 intentos de contraseña incorrecta
-
+    
     #checkPassword(password) {
         if (this.#isLocked) {
             throw new Error("Account is locked due to multiple failed attemps")
         }
-
+        
         if (password !== this.#password){
             this.#failedAttemps++
             
             if (this.#failedAttemps >= 3) {
                 this.#isLocked = true
                 throw new Error("Account locked after 3 failed attempts")
-        }
-
+            }
+            
         throw new Error("Incorrect password")
-
-        }
-
-        // Si es correcta, reinicia intentos
-        this.#failedAttemps = 0
-        return true
-    }
-
-    // MÉTODO PRIVADO para registrar transacciones
-    #addTransaction(type, amount, description = "") {
-        const tx = new Transaction(type, amount, description)
-        this.#transactions.push(tx)
+        
     }
     
-    deposit(amount, password){
-        this.#checkPassword(password)
+    // Si es correcta, reinicia intentos
+    this.#failedAttemps = 0
+    return true
+}
 
-        if(amount <= 0){
-            throw new Error("Deposit amount must be greater than 0")
-        }
-        this.balance += amount
-        this.#addTransaction("deposit", amount)
-    }
+// MÉTODO PRIVADO para registrar transacciones
+#addTransaction(type, amount, description = "") {
+    const tx = new Transaction(type, amount, description)
+    this[transactionsKey].push(tx)
+}
 
-    withdraw (amount){
-        this.#checkPassword(password)
-
-        if (amount <= 0){
-            throw new Error ("Withdraw amount must be greater than 0")
-        }
-        if (amount > this.balance){
-            throw new Error("Insufficient funds")
-        }
-        this.balance -= amount
-        this.#addTransaction("withdraw", amount)
-    } 
+deposit(amount, password){
+    this.#checkPassword(password)
     
-    get balanceAmount(){
-        return this.balance
+    if(amount <= 0){
+        throw new Error("Deposit amount must be greater than 0")
     }
-    
-    set password(newPassword){
-        if (newPassword.lenght < 6 ){
-            throw new Error("Password must be at least 6 characters long");
-        }
-        this.#password = newPassword
-    }
+    this.balance += amount
+    this.#addTransaction("deposit", amount)
+}
 
-    // EXTRA- Método getStatement() que muestra el extracto de movimientos de la cuenta
-    getStatement() {
-        return this.#transactions.map(tx => {
-          const date = tx.date.toLocaleString()
-          return `[${date}] ${tx.type}: ${tx.amount}€ ${tx.description}`
-        })
-      }
+withdraw (amount){
+    this.#checkPassword(password)
+    
+    if (amount <= 0){
+        throw new Error ("Withdraw amount must be greater than 0")
+    }
+    if (amount > this.balance){
+        throw new Error("Insufficient funds")
+    }
+    this.balance -= amount
+    this.#addTransaction("withdraw", amount)
+} 
+
+get balanceAmount(){
+    return this.balance
+}
+
+set password(newPassword){
+    if (newPassword.lenght < 6 ){
+        throw new Error("Password must be at least 6 characters long");
+    }
+    this.#password = newPassword
+}
+
+// EXTRA- Método getStatement() que muestra el extracto de movimientos de la cuenta
+getStatement() {
+    return this[transactionsKey.map](tx => {
+        const date = tx.date.toLocaleString()
+        return `[${date}] ${tx.type}: ${tx.amount}€ ${tx.description}`
+    })
+}
 }
 
 
@@ -237,7 +241,6 @@ class Bank {
 💡 Extras (desafío opcional para aumentar la complejidad)
 **************************************************************/
 
-
 //- Crear una clase Transaction para registrar el historial de transacciones
 
 class Transaction {
@@ -249,7 +252,6 @@ class Transaction {
     }   
 }
 
-// - Usar encapsulamiento real con # o Symbol para propiedades privadas
 // - Utilizar Object.defineProperty para personalizar getters/setters
 //- Usar Object.freeze() para proteger objetos contra modificaciones
 
