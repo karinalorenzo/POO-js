@@ -112,6 +112,27 @@ class SavingsAccount extends Account {
 - withdraw(): permite saldo negativo hasta el límite de sobregiro
 */
 
+class CurrentAccount extends Account {
+    constructor(owner, password, overdraftLimit){
+        super(owner, password)
+        this.overdraftLimit = overdraftLimit
+    }
+
+    withdraw(amount){
+        if (amount <= 0){
+            throw new Error("Withdraw amount must be greater than 0")
+        }
+
+        const newBalance = this.balance - amount
+
+        if (newBalance < -this.overdraftLimit){
+            throw new Error("Overdraft limit exceeded")
+        }
+
+        this.balance = newBalance
+    }
+}
+
 /*
 4. Clase Bank
 --------------
