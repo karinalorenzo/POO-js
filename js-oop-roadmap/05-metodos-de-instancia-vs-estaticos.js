@@ -77,7 +77,7 @@ console.log(p2.greet()); // Hola, mi nombre es Maria
 */
 
 /*
-📌 Intento de acceder a atributo estático desde un objeto (no recomendado)
+📌 Intento de acceder al atributo estático desde un objeto (no recomendado)
 */
 console.log(p1.species); // undefined
 

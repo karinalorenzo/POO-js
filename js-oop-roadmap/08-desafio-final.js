@@ -36,6 +36,44 @@ Orientada a Objetos (POO):
 - setter password: verifica que la contraseña tenga al menos 6 caracteres
 */
 
+class Account {
+    #password
+
+    constructor(owner, password){
+        this.owner = owner;
+        this.balance = this.balance;
+        this.#password = password;
+    }
+
+    deposit(amount){
+        if(amount <= 0){
+            throw new Error("Deposit amount must be greater than 0")
+        }
+        this.balance += amount
+    }
+    withdraw (amount){
+        if (amount <= 0){
+            throw new Error ("Withdraw amount must be greater than 0")
+        }
+        if (amount > this.balance){
+            throw new Error("Insufficient funds")
+        }
+        this.balance -= amount
+    }
+
+    get balanceAmount(){
+        return this.balance
+    }
+
+    set password(newPassword){
+        if (newPassword.lenght <6){
+            throw new Error("Password must be at least 6 characters long");
+        }
+        this.#password = newPassword
+    }
+}
+
+
 /*
 2. SavingsAccount (Cuenta Ahorro)
 ----------------------------------
