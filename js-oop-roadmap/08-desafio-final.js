@@ -38,28 +38,60 @@ Orientada a Objetos (POO):
 
 class Account {
     #password
-    #transactions = [] // <- Nueva propiedad privada
-
+    // Nuevas propiedades privadas
+    #transactions = [] 
+    #failedAttemps = 0 
+    #isLocked = false
+    
     constructor(owner, password){
         this.owner = owner;
         this.balance = this.balance;
         this.#password = password;
     }
+    
+    // EXTRA - Implementar bloqueo de cuenta después de 3 intentos de contraseña incorrecta
 
-    // ← 2. MÉTODO PRIVADO para registrar transacciones
-  #addTransaction(type, amount, description = "") {
-    const tx = new Transaction(type, amount, description)
-    this.#transactions.push(tx)
-  }
+    #checkPassword(password) {
+        if (this.#isLocked) {
+            throw new Error("Account is locked due to multiple failed attemps")
+        }
 
-    deposit(amount){
+        if (password !== this.#password){
+            this.#failedAttemps++
+            
+            if (this.#failedAttemps >= 3) {
+                this.#isLocked = true
+                throw new Error("Account locked after 3 failed attempts")
+        }
+
+        throw new Error("Incorrect password")
+
+        }
+
+        // Si es correcta, reinicia intentos
+        this.#failedAttemps = 0
+        return true
+    }
+
+    // MÉTODO PRIVADO para registrar transacciones
+    #addTransaction(type, amount, description = "") {
+        const tx = new Transaction(type, amount, description)
+        this.#transactions.push(tx)
+    }
+    
+    deposit(amount, password){
+        this.#checkPassword(password)
+
         if(amount <= 0){
             throw new Error("Deposit amount must be greater than 0")
         }
         this.balance += amount
         this.#addTransaction("deposit", amount)
     }
+
     withdraw (amount){
+        this.#checkPassword(password)
+
         if (amount <= 0){
             throw new Error ("Withdraw amount must be greater than 0")
         }
@@ -69,7 +101,6 @@ class Account {
         this.balance -= amount
         this.#addTransaction("withdraw", amount)
     } 
-
     
     get balanceAmount(){
         return this.balance
@@ -218,10 +249,6 @@ class Transaction {
     }   
 }
 
- 
-
-
-// - Implementar bloqueo de cuenta después de 3 intentos de contraseña incorrecta
 // - Usar encapsulamiento real con # o Symbol para propiedades privadas
 // - Utilizar Object.defineProperty para personalizar getters/setters
 //- Usar Object.freeze() para proteger objetos contra modificaciones
