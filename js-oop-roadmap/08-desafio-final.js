@@ -36,6 +36,15 @@ Orientada a Objetos (POO):
 - setter password: verifica que la contraseña tenga al menos 6 caracteres
 */
 
+// EXTRA - Utilizar Object.defineProperty para personalizar getters/setters
+const BankConfig = Object.freeze({
+    bankName: "JavaScript National Bank",
+    founded: 2024,
+    defaultInterestRate: 0.03,   // 3%
+    defaultOverdraftLimit: 200   // 200€
+  })
+  
+
 // EXTRA - Usar encapsulamiento real con # o Symbol para propiedades privadas
 const transactionsKey = Symbol("transactions") // esto permite encapsular el historial de transacciones
 
@@ -141,7 +150,7 @@ getStatement() {
 */
 
 class SavingsAccount extends Account { 
-    constructor(owner, password, interestRate){
+    constructor(owner, password, interestRate = BankConfig.defaultInterestRate){
         super(owner, password)
         this.interestRate = interestRate
     }
@@ -166,7 +175,7 @@ class SavingsAccount extends Account {
 */
 
 class CurrentAccount extends Account {
-    constructor(owner, password, overdraftLimit){
+    constructor(owner, password, overdraftLimit = BankConfig.defaultOverdraftLimit){
         super(owner, password)
         this.overdraftLimit = overdraftLimit
     }
@@ -252,7 +261,6 @@ class Transaction {
     }   
 }
 
-// - Utilizar Object.defineProperty para personalizar getters/setters
 //- Usar Object.freeze() para proteger objetos contra modificaciones
 
 
