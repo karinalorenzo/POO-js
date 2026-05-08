@@ -149,6 +149,41 @@ class CurrentAccount extends Account {
 - static bankInfo(): devuelve un nombre ficticio del banco y año de fundación
 */
 
+class Bank {
+    constructor(){
+        this.accounts = []
+    }
+
+    addAccount(account){
+        if (!(account instanceof Account)){
+            throw new Error("Only Account instances can be added")
+        }
+        this.accounts.push(account)
+    }
+
+    findAccountByOwner(ownerName){
+        return this.accounts.find(acc => acc.owner === ownerName) || null
+    }
+
+    transfer(fromOwner, toOwner, amount) {
+        const fromAccount = this.findAccountByOwner(fromOwner)
+        const toAccount = this.findAccountByOwner(toOwner)
+
+        if (!fromAccount || !toAccount){
+
+            throw new Error("One or both accounts not found")
+        }
+
+        fromAccount.withdraw(amount)
+        toAccount.deposit(amount)
+    }
+
+    static bankInfo(){
+        return "JavaScript National Bank - Founded 2024"
+    }
+
+}
+
 /*************************************************************
 💡 Extras (desafío opcional para aumentar la complejidad)
 **************************************************************/
